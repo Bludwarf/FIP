@@ -1,0 +1,33 @@
+{
+	"resultCount": 1,
+	"results": [{
+		"wrapperType": "track",
+		"kind": "song",
+		"artistId": 559922860,
+		"collectionId": 970100894,
+		"trackId": 970100904,
+		"artistName": "Dom La Nena",
+		"collectionName": "Soyo",
+		"trackName": "Volto Ja",
+		"collectionCensoredName": "Soyo",
+		"trackCensoredName": "Volto Ja",
+		"artistViewUrl": "https://itunes.apple.com/fr/artist/dom-la-nena/id559922860?uo=4",
+		"collectionViewUrl": "https://itunes.apple.com/fr/album/volto-ja/id970100894?i=970100904&uo=4",
+		"trackViewUrl": "https://itunes.apple.com/fr/album/volto-ja/id970100894?i=970100904&uo=4",
+		"artworkUrl30": "http://is1.mzstatic.com/image/pf/us/r30/Music5/v4/b8/24/fa/b824fa3e-9fef-f0b5-8119-9bf9e25a3695/15UMGIM11284.30x30-50.jpg",
+		"artworkUrl60": "http://is5.mzstatic.com/image/pf/us/r30/Music5/v4/b8/24/fa/b824fa3e-9fef-f0b5-8119-9bf9e25a3695/15UMGIM11284.60x60-50.jpg",
+		"artworkUrl100": "http://is1.mzstatic.com/image/pf/us/r30/Music5/v4/b8/24/fa/b824fa3e-9fef-f0b5-8119-9bf9e25a3695/15UMGIM11284.100x100-75.jpg",
+		"releaseDate": "2015-06-29T07:00:00Z",
+		"collectionExplicitness": "notExplicit",
+		"trackExplicitness": "notExplicit",
+		"discCount": 1,
+		"discNumber": 1,
+		"trackCount": 11,
+		"trackNumber": 8,
+		"trackTimeMillis": 199270,
+		"country": "FRA",
+		"currency": "EUR",
+		"primaryGenreName": "Musiques du monde",
+		"isStreamable": false
+	}]
+}

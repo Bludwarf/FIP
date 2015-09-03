@@ -1,0 +1,109 @@
+
+
+
+{
+	"current": {
+
+		"emission": {
+			"startTime": 1435096800,
+			"endTime": 1435183199,
+			"id": "63947e415fa60608409b71a6d59e77c8",
+			"titre": "", 
+			"visuel": {
+				"small": "http://www.fipradio.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover.png"
+			},
+			"lien": "http://www.fipradio.fr/"
+		},
+		"song": {
+			"startTime": 1435133792,
+			"endTime": 1435133964,
+			"id": "c0869a14dc8021fe2210639ee0cd3880",
+			"titre": "MAHNA MAHNA", 
+			"titreAlbum": "B SIDES AND RARITIES", 
+		  	"interpreteMorceau": "CAKE", 
+		  	"anneeEditionMusique": "2007", 
+		    "label": "UPBEAT RECORDINGS", 
+		  	"visuel": {
+				"small": "http://is2.mzstatic.com/image/pf/us/r30/Music/08/70/10/mzi.zizvkxag.100x100-75.jpg",
+                "medium": "http://is2.mzstatic.com/image/pf/us/r30/Music/08/70/10/mzi.zizvkxag.400x400-75.jpg"
+			},
+			"lien": "https://itunes.apple.com/fr/album/mahna-mahna/id267846803?i=267847236&uo=4"
+		}
+	},
+	"previous2": {	
+		
+		"song": {
+			"startTime": 1435133460,
+			"endTime": 1435133720,
+			"id": "8beafcf17d3fb8b17057a29f90c3fa37",
+			"titre": "DESCARGA BONTEMPI", 
+			"titreAlbum": "SOFRITO : TROPICAL DISCOTHEQUE", 
+		  	"interpreteMorceau": "EL TIMBA", 
+		  	"anneeEditionMusique": "2011", 
+		    "label": "STRUT RECORD", 
+		  	"visuel": {
+				"small": "http://is4.mzstatic.com/image/pf/us/r30/Music/aa/9c/4f/mzi.ujvqymnf.100x100-75.jpg",
+                "medium": "http://is4.mzstatic.com/image/pf/us/r30/Music/aa/9c/4f/mzi.ujvqymnf.400x400-75.jpg"
+			},
+			"lien": "https://itunes.apple.com/fr/album/descarga-bontempi/id410003254?i=410003345&uo=4"
+		}
+	},
+	"previous1": {	
+		
+		"song": {
+			"startTime": 1435133719,
+			"endTime": 1435133793,
+			"id": "86150714b44503015c3294d2ca73fa6a",
+			"titre": "MAIS NON MAIS NON", 
+			"titreAlbum": "COCKTAIL PARTY", 
+		  	"interpreteMorceau": "RADIOMATIC", 
+		  	"anneeEditionMusique": "2010", 
+		    "label": "BELIEVE", 
+		  	"visuel": {
+				"small": "http://is4.mzstatic.com/image/pf/us/r30/Music/6c/c8/81/mzi.dlminduj.100x100-75.jpg",
+                "medium": "http://is4.mzstatic.com/image/pf/us/r30/Music/6c/c8/81/mzi.dlminduj.400x400-75.jpg"
+			},
+			"lien": "https://itunes.apple.com/fr/album/mais-non-mais-non/id402081787?i=402081801&uo=4"
+		}
+	},
+	"next1": {	
+	
+		"song": {
+			"startTime": 1435133965,
+			"endTime": 1435134259,
+			"id": "ed1b2801d793afda9ecd2ef34c5b4a14",
+			"titre": "JAMBO", 
+			"titreAlbum": "JAMBO CARAIBE", 
+		  	"interpreteMorceau": "DIZZY GILLESPIE", 
+		  	"anneeEditionMusique": "1964", 
+		    "label": "VERVE", 
+		  	"visuel": {
+				"small": "http://is5.mzstatic.com/image/pf/us/r30/Music/y2004/m05/d21/h20/s05.sskuvwvn.100x100-75.jpg",
+                "medium": "http://is5.mzstatic.com/image/pf/us/r30/Music/y2004/m05/d21/h20/s05.sskuvwvn.400x400-75.jpg"
+			},
+			"lien": "https://itunes.apple.com/fr/album/poor-joe/id17128271?i=17128288&uo=4"
+		}
+	},
+	"next2": {	
+		
+		"song": {
+			"startTime": 1435134260,
+			"endTime": 1435134501,
+			"id": "facfc398177a8623d9ae8ba5e94b7754",
+			"titre": "QUINTETTE N°2 EN UT MIN OP 115 : ALLEGRO VIVO", 
+			"titreAlbum": "GABRIEL FAURE : INTEGRALE DES QUINTETTES", 
+		  	"interpreteMorceau": "GABRIEL FAURE/COR QUATUOR EBENE/PNO ERIC LE SAGE", 
+		  	"anneeEditionMusique": "2010", 
+		    "label": "ALPHA (ET MBM) @", 
+		  	"visuel": {
+				"small": "http://www.fipradio.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover.png",
+                "medium": "http://www.fipradio.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover_medium.png"
+			},
+			"lien": "http://www.fipradio.fr/"
+		}
+	}
+
+
+
+}
+ 

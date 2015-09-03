@@ -1,0 +1,21 @@
+FIP
+	Dom la nena
+	volto ja
+	http://is1.mzstatic.com/image/pf/us/r30/Music5/v4/b8/24/fa/b824fa3e-9fef-f0b5-8119-9bf9e25a3695/15UMGIM11284.100x100-75.jpg
+
+iTunes : https://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html
+	 1 résultat  : https://itunes.apple.com/search?country=FR&media=music&term=Dom+la+nena+VOLTO+JA
+	16 résultats : https://itunes.apple.com/search?country=FR&media=music&attribute=songTerm&term=VOLTO+JA
+	
+	Pour inclusion cross domain
+		https://itunes.apple.com/search?country=FR&media=music&term=Dom+la+nena+VOLTO+JA&callback=?
+		
+		// Source : http://stackoverflow.com/a/19459346/1655155
+		$.getJSON("https://itunes.apple.com/search?term=lorde&media=music&entity=musicTrack&callback=?", function (data) {
+			console.log('success');
+			if (data.results.length > 0) {
+				console.log('results');
+			} else {
+				console.log('No match found for track information specified.');
+			}
+		});
