@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         Archives FIP
+// @namespace    http://your.homepage/
+// @version      0.1
+// @description  Récup facile des archives FIP en une seule page
+// @author       bludwarf@gmail.com
+// @match        http://www.fipradio.fr/archives-antenne
+// @grant        none
+// ==/UserScript==
+
 function importJS(src) {
 	src = src || "https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js";
 
@@ -167,11 +177,13 @@ fip.date = function(jour) {
 fip.ajax_2015_09 = function(jour, heure, cb) {
 	var url = 'http://www.fipradio.fr/system/ajax';
 	var date = fip.date(jour);
+	var form_build_id = document.forms['fip-titres-diffuses-form-search-date'].form_build_id.value;
+	var form_id = document.forms['fip-titres-diffuses-form-search-date'].form_id.value;
 	fip.$.post(url, {
 		select_jour: date.getTime() / 1000,
 		select_heure: heure,
-		form_build_id: 'form-2ai4wnZBkMg_u0T-LfisWTgoEf40L8HT8r_Iu_CIzCw',
-		form_id: 'fip_titres_diffuses_form_search_date',
+		form_build_id: form_build_id,
+		form_id: form_id,
 		_triggering_element_name: 'op',
 		_triggering_element_value: 'OK'
 	}, function(response, textStatus, jqXHR) {
@@ -449,6 +461,7 @@ fip.Grid.Creneau.CSS_CLASS = 'grid-song';
  * @param son : un ou plusieurs son
  * g.add(sons[0])
  */
+// TODO : l'idéal serait de pouvoir générer le code Javascript (qui génère le div) depuis un fichier HTML (compilation) pour faciliter le maquettage
 fip.Grid.Creneau.prototype.add = function(son) {
 	if (son instanceof Array) {
 		var sons = son;
@@ -467,16 +480,16 @@ fip.Grid.Creneau.prototype.add = function(son) {
 	}
 	var d = son.duree();
 	
-	var left  = m * 10; // px
-	var width = d * 10; // px
+	var left  = m / .6; // % du div parent qui fait une heure (60 minutes)
+	var width = d / .6; // (idem)
 	var id = son.id();
 	var src = son.image.src();
 	var vidLink = son.youtube || youtube.getSearchLink(son); // Si le lien direct est connu on l'utilise
 	
 	// L'id est utilisé en tant que class pour permettre d'ajouter plusieurs instance du même son
 	// Exemple pour récupérer le sonsDiv après coup : var sonsDiv = fip.$('.son-2015-06-24-18h54');
-	var heuresDiv = fip.$('<div class="grid-song-heure '+id+'" style="left: '+left+'px;">'+m+'</div>'); // TODO : 1er titre -> "13h" au lieu de "00"
-	var sonsDiv   = fip.$('<a href="'+vidLink+'" target="youtube"><div class="grid-son '+id+'" style="left: '+left+'px; width: '+width+'px;" title="'+son.toString()+'"><img src="'+src+'"></div></a>');
+	var heuresDiv = fip.$('<div class="grid-song-heure '+id+'" style="left: '+left+'%;">'+m+'</div>'); // TODO : 1er titre -> "13h" au lieu de "00"
+	var sonsDiv   = fip.$('<a href="'+vidLink+'" target="youtube"><div class="grid-son '+id+'" style="left: '+left+'%; width: '+width+'%;" title="'+son.toString()+'"><img src="'+src+'"></div></a>');
 	
 	this.$heures.append(heuresDiv);
 	this.$sons.append(sonsDiv);
@@ -683,7 +696,9 @@ itunes.get = function(son, callback) {
 // http://www.fipradio.fr/archives-antenne?start_date=2015-06-22&start_hour=13
 //importJS();
 
-var jour = '2015-06-22';
-
 // Création du créneau
-var c = new fip.Grid.Creneau('2015-06-22', 13).fill();
+//var jour = '2015-06-22';
+//var c = new fip.Grid.Creneau('2015-06-22', 13).fill();
+
+// Exports (pour GreaseMonkey)
+window.fip = fip;
