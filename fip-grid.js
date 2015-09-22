@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Récup facile des archives FIP en une seule page
 // @author       bludwarf@gmail.com
-// @match        http://www.fipradio.fr/archives-antenne
+// @match        http://www.fipradio.fr/archives-antenne*
 // @grant        none
 // ==/UserScript==
 
@@ -420,6 +420,18 @@ fip.Grid = function() {
  */
 fip.Grid.Creneau = function(jour, heure, div) {
 
+	// Aucun param
+	if (!jour && !heure) {
+		var now = new Date();
+		var yyyy = now.getYear()+1900;
+		var mm = now.getMonth()+1;
+		if (mm < 10) mm = '0'+mm;
+		var dd = now.getDate();
+		if (dd < 10) dd = '0'+dd;
+		jour = yyyy+'-'+mm+'-'+dd;
+		heure = now.getHours();
+	}
+
 	// Param jour absent
 	if (typeof jour === 'number' && typeof div === 'undefined') {
 		div = heure;
@@ -698,7 +710,7 @@ itunes.get = function(son, callback) {
 
 // Création du créneau
 //var jour = '2015-06-22';
-//var c = new fip.Grid.Creneau('2015-06-22', 13).fill();
+var c = new fip.Grid.Creneau().fill();
 
 // Exports (pour GreaseMonkey)
 window.fip = fip;
