@@ -12,7 +12,7 @@ Se rendre sur FIP (archives antenes) puis cliquer sur le bouton de TamperMonkey 
 
 ![capture](doc/TamperMonkey-before-2015-09-04.png)
 
-Cliquer sur "Ajouter un nouveau script" puis remplacer le contenu du script par le fichier [fip-grid.js](fip-grid.js).
+Cliquer sur "Ajouter un nouveau script" puis remplacer le contenu du script par le fichier [fip-grid.js](fip-grid.user.js).
 
 ![capture](doc/TamperMonkey-install-2015-09-04.png)
 
