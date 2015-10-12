@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Archives FIP
-// @namespace    http://your.homepage/
+// @namespace    http://bludwarf.fr/fip
 // @version      0.1
+// @downloadURL  https://raw.githubusercontent.com/Bludwarf/FIP/master/fip-grid.user.js
 // @description  Récup facile des archives FIP en une seule page
 // @author       bludwarf@gmail.com
 // @match        http://www.fipradio.fr/archives-antenne*
@@ -18,6 +19,19 @@ function importJS(src) {
 	// ... give time for script to load, then type.
 	alert('give time for script to load, then press OK');
 	jQuery.noConflict();
+}
+
+/**
+ * Importe une feuille de style CSS dans le document
+ * @param href lien vers la feuille de style
+ * @author http://www.abeautifulsite.net/manipulating-stylesheets-with-greasemonkey/
+ */
+function importCSS(href) {
+	var link = window.document.createElement('link');
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = href;
+	document.getElementsByTagName("HEAD")[0].appendChild(link);
 }
 
 
@@ -707,6 +721,8 @@ itunes.get = function(son, callback) {
 
 // http://www.fipradio.fr/archives-antenne?start_date=2015-06-22&start_hour=13
 //importJS();
+
+importCSS("https://raw.githubusercontent.com/Bludwarf/FIP/master/styles.css");
 
 // Création du créneau
 //var jour = '2015-06-22';
