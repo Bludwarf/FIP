@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archives FIP
 // @namespace    http://bludwarf.fr/fip
-// @version      0.1
+// @version      0.5
 // @downloadURL  https://raw.githubusercontent.com/Bludwarf/FIP/master/fip-grid.user.js
 // @description  Récup facile des archives FIP en une seule page
 // @author       bludwarf@gmail.com
