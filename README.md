@@ -8,15 +8,13 @@ Exemple de rendu une fois le userscript chargé avec TamperMonkey et le CSS avec
 # Installation
 Installer l'extension Chrome "TamperMonkey".
 
-Se rendre sur FIP (archives antenes) puis cliquer sur le bouton de TamperMonkey en haut à droite de Chrome.
+Cliquer sur l'URL suivante : https://github.com/Bludwarf/FIP/raw/master/fip-grid.user.js.
 
-![capture](doc/TamperMonkey-before-2015-09-04.png)
+TamperMonkey se charge automatiquement. Cliquer alors sur le bouton "Installer".
 
-Cliquer sur "Ajouter un nouveau script" puis remplacer le contenu du script par le fichier [fip-grid.js](fip-grid.user.js).
+![capture](doc/TamperMonkey-install.png)
 
-![capture](doc/TamperMonkey-install-2015-09-04.png)
-
-Le script est alors chargé à chaque fois que vous retournez sur cette page de FIP. TamperMonkey vous le confirme en ajoutant un petit point rouge sur son icone en haut à droite.
+Le script sera ensuite chargé à chaque fois que vous retournez sur cette page de FIP. TamperMonkey vous le confirme en ajoutant un petit point rouge sur son icone en haut à droite.
 
 ![capture](doc/TamperMonkey-2015-09-04.png)
 
