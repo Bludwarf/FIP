@@ -504,7 +504,7 @@ fip.Son.Image = function(div) {
 	if (!div || !div.getAttribute) return;
 	
 	this.div = div;
-	this.json = {}; // alternative
+	this.json = null; // alternative
 };
 
 fip.Son.Image.createFromSrc = function(src) {
