@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archives FIP
 // @namespace    http://bludwarf.fr/fip
-// @version      0.5
+// @version      0.6
 // @downloadURL  https://raw.githubusercontent.com/Bludwarf/FIP/master/fip-grid.user.js
 // @description  Récup facile des archives FIP en une seule page
 // @author       bludwarf@gmail.com
@@ -245,7 +245,42 @@ fip.Son = function(div, jour) {
 	this.jour = jour;
 	
 	this.image = new fip.Son.Image(fip.$('img', $div).get(0));
-}
+	this.json = {};
+};
+
+fip.Son.createFromJSON = function(json) {
+	var jour = fip.jour(new Date(json.date));
+	var o = new fip.Son(null, jour);
+	o.json = json;
+	o.image = fip.Son.Image.createFromSrc(json.image);
+	return o;
+};
+
+fip.Son.prototype.getText = function(cssPath) {
+	return fip.$(cssPath, this.$div).html().trim();
+};
+
+/**
+ * artiste
+ */
+// TODO : accents ?
+Object.defineProperty(fip.Son.prototype, 'artiste', {
+	get: function() {
+		if (!this.json.artiste) this.json.artiste = this.getText('.titre_artiste');
+		return this.json.artiste;
+	}
+});
+
+/**
+ * artiste
+ */
+// TODO : accents ?
+Object.defineProperty(fip.Son.prototype, 'title', {
+	get: function() {
+		if (!this.json.title) this.json.title = this.getText('.titre_title');
+		return this.json.title;
+	}
+});
 
 /*fip.Son.getFromDiv = function(div) {
 	if (!this.sonsFromDiv) this.sonsFromDiv = {};
@@ -259,125 +294,182 @@ fip.Son = function(div, jour) {
 }*/
 
 /**
- * 13h56
- */
-fip.Son.prototype.heure = function() {
-	return fip.$('.titre_date > span', this.$div).html().trim();
-}
-
-/**
- *
+ * artiste
  */
 // TODO : accents ?
-fip.Son.prototype.artiste = function() {
-	return fip.$('.titre_artiste', this.$div).html().trim();
-}
+Object.defineProperty(fip.Son.prototype, 'titre', {
+	get: function() {
+		return this.title;
+	}
+});
 
-fip.Son.prototype.title = function() {
-	return fip.$('.titre_title', this.$div).html().trim();
-}
-fip.Son.prototype.titre = fip.Son.prototype.title;
+fip.Son.prototype._initAlbumAnnee = function() {
+	var album = this.getText('.titre_album');
+
+	if (!album.match(/Album&nbsp;: /)) throw new Error('On arrive pas à devenir le nom de l\'album dans la chaine : ' + album);
+	album = album.substr('Album&nbsp;: '.length);
+
+	// Avec Date ? format : " (2014)" par exemple
+	var result = /^(.+) \((\d{4})\)$/i.exec(album);
+	if (result) {
+		this.json.album = result[1];
+		this.json.annee = result[2];
+	}
+
+	else {
+		this.json.album = album;
+		delete this.json.annee;
+	}
+};
 
 /**
  * Toujours en majuscule et sans l'année.
- * 
+ *
  * Format #1 : SOYO (2015)
  * Format #2 : SOYO
  */
-fip.Son.prototype.album = function() {
-	var album = fip.$('.titre_album', this.$div).html().trim();
-	
-	if (!album.startsWith('Album&nbsp;: ')) throw new Error('On arrive pas à devenir le nom de l\'album dans la chaine : ' + album);
-	album = album.substr('Album&nbsp;: '.length);
-	
-	// Avec Date ? format : " (2014)" par exemple
-	var result = /^(.+) +\(\d{4}\)$/ig.exec(album);
-	if (result) return result[1];
-	
-	return album;
-}
+Object.defineProperty(fip.Son.prototype, 'album', {
+	get: function() {
+
+		if (!this.json.album) {
+			this._initAlbumAnnee();
+		}
+
+		return this.json.album;
+	}
+});
 
 /**
- * @param date : par défaut this.date() (ex : "14h56")
+ * Année de l'album (si connue)
  */
-fip.Son.prototype.date = function() {
-	var h = this.heure().replace('h', ':');
-	return new Date(this.jour+'T'+h+'+0200');
-}
+Object.defineProperty(fip.Son.prototype, 'annee', {
+	get: function() {
+
+		if (!this.json.album) {
+			this._initAlbumAnnee();
+		}
+
+		return this.json.annee;
+	}
+});
+
+/**
+ * @param date : par défaut this.date (ex : "14h56")
+ */
+Object.defineProperty(fip.Son.prototype, 'date', {
+	get: function() {
+		if (!this.json.date) {
+			var h = this.heure.replace('h', ':');
+			this.json.date = new Date(this.jour + 'T' + h + '+0200');
+		}
+		return this.json.date;
+	}
+});
+
+/**
+ * 13h56
+ */
+Object.defineProperty(fip.Son.prototype, 'heure', {
+	get: function() {
+		if (!this.json.heure) this.json.heure = this.getText('.titre_date > span');
+		return this.json.heure
+	}
+});
 
 /**
  * 13h56 -> 56
  */
-fip.Son.prototype.minutes = function() {
-	return parseInt(this.heure().substring(3));
-}
+Object.defineProperty(fip.Son.prototype, 'minutes', {
+	get: function() {
+		return parseInt(this.heure.substring(3));
+	}
+});
 
 /**
  * Le son précédent chronologiquement
  */
-fip.Son.prototype.previous = function() {
-	var next = this.$div.next();
-	if (!next || next.length == 0) return null;
-	return new fip.Son(next, this.jour); // TODO : perf OK ?
-}
+Object.defineProperty(fip.Son.prototype, 'previous', {
+	get: function() {
+		var next = this.$div.next();
+		if (!next || next.length == 0) return null;
+		return new fip.Son(next, this.jour); // TODO : perf OK ?
+	}
+});
 
 /**
  * Le son suivant chronologiquement
  */
-fip.Son.prototype.next = function() {
-	var prev = this.$div.prev();
-	if (!prev || prev.length == 0) return null;
-	return new fip.Son(prev, this.jour); // TODO : perf OK ?
-}
+Object.defineProperty(fip.Son.prototype, 'next', {
+	get: function() {
+		var prev = this.$div.prev();
+		if (!prev || prev.length == 0) return null;
+		return new fip.Son(prev, this.jour); // TODO : perf OK ?
+	}
+});
 
 /**
  * en minutes
  */
-fip.Son.prototype.duree = function() {
-	var next = this.next();
-	if (next) {
-		return next.minutes() - this.minutes();
+Object.defineProperty(fip.Son.prototype, 'duree', {
+	get: function() {
+		var next = this.next;
+		if (next) {
+			return next.minutes - this.minutes;
+		}
+		else {
+			return undefined;
+		}
 	}
-	else {
-		// Par défaut on estime que le son se termine au début de l'heure suivante
-		// FIXME : que faire si le son est le son actuellement en diffusion ?
-		console.log('Par défaut on estime que le son se termine au début de l\'heure suivante : ' + this.toString());
-		return 60 - this.minutes();
-	}
-}
+});
 
 fip.Son.prototype.toString = function() {
-	return this.artiste() + ' - ' + this.titre();
-}
+	return this.artiste + ' - ' + this.titre;
+};
+
+fip.Son.prototype.toJSON = function() {
+	var props = ['album', 'artiste', 'date', 'duree', 'titre'];
+	var json = {};
+	var son = this;
+	props.forEach(function(prop) {
+		if (son[prop] != undefined) json[prop] = son[prop];
+	});
+	if (!this.image.isDefault) json.image = this.image.src;
+	if (this.annee) json.annee = this.annee;
+	return json;
+};
 
 /**
  * Pour utilisation dans le HTML : son-2015-06-22-15h03 (22 juin à 15h03)
  *
- * Exemple pour récup tous les div liés au son dans la grille : var sonDivs = fip.$('.'+son.id());
+ * Exemple pour récup tous les div liés au son dans la grille : var sonDivs = fip.$('.'+son.id);
  */
-fip.Son.prototype.id = function() {
-	return 'son-' + this.jour + '-' + this.heure();
-}
+Object.defineProperty(fip.Son.prototype, 'id', {
+	get: function() {
+		return 'son-' + this.jour + '-' + this.heure;
+	}
+});
 
 /**
  * tous les div qui concerne ce son
  */
-fip.Son.prototype.$ = function() {
-	return fip.$('.'+fip.Grid.Creneau.CSS_CLASS+' .'+this.id());
-}
+Object.defineProperty(fip.Son.prototype, '$', {
+	get: function() {
+	return fip.$('.'+fip.Grid.Creneau.CSS_CLASS+' .'+this.id);
+	}
+});
 
 /**
  * show() sur tous les div qui concerne ce son
  */
 fip.Son.prototype.show = function() {
-	this.$().show();
+	this.$.show();
 }
 
 /**
  * hide() sur tous les div qui concerne ce son
  */
 fip.Son.prototype.hide = function() {
-	this.$().hide();
+	this.$.hide();
 }
 
 /**
@@ -404,7 +496,7 @@ fip.Son.prototype.itunes = function() {
 	}
 	
 	return son._itunes;
-}
+};
 
 
 
@@ -412,22 +504,36 @@ fip.Son.Image = function(div) {
 	if (!div || !div.getAttribute) return;
 	
 	this.div = div;
-}
+	this.json = {}; // alternative
+};
+
+fip.Son.Image.createFromSrc = function(src) {
+	var o = new fip.Son.Image();
+	o.json = {
+		src: src
+	};
+	return json;
+};
 
 fip.Son.Image.DEFAULT_SRC = 'http://www.fipradio.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover.png';
 
-fip.Son.Image.prototype.src = function() {
-	return this.div.getAttribute('src');
-}
+Object.defineProperty(fip.Son.Image.prototype, 'src', {
+	get: function() {
+		if (this.json) return this.json.src;
+		return this.div.getAttribute('src');
+	}
+});
 
-fip.Son.Image.prototype.isDefault = function() {
-	return this.src() === this.DEFAULT_SRC;
-}
+Object.defineProperty(fip.Son.Image.prototype, 'isDefault', {
+	get: function() {
+		return this.src === fip.Son.Image.DEFAULT_SRC;
+	}
+});
 
 
 
 fip.Grid = function() {
-}
+};
 
 /**
  * Grille pour un créneau horaire d'une journée donnée
@@ -455,7 +561,7 @@ fip.Grid.Creneau = function(jour, heure, div) {
 	}
 
 	// Param jour absent
-	if (typeof jour === 'number' && typeof div === 'undefined') {
+	else if (typeof jour === 'number' && typeof div === 'undefined') {
 		div = heure;
 		heure = jour;
 		jour = fip.jour();
@@ -487,7 +593,7 @@ fip.Grid.Creneau = function(jour, heure, div) {
 	
 	// RAZ
 	this.clear();
-}
+};
 
 fip.Grid.Creneau.CSS_CLASS = 'grid-song';
 
@@ -507,17 +613,17 @@ fip.Grid.Creneau.prototype.add = function(son) {
 	}
 	if (!son instanceof fip.Son) return;
 	
-	var m = son.minutes();
+	var m = son.minutes;
 	if (this.sons[m]) {
 		console.warn('Son déjà ajouté : ' + son.toString());
 		return;
 	}
-	var d = son.duree();
+	var d = son.duree;
 	
 	var left  = m / .6; // % du div parent qui fait une heure (60 minutes)
 	var width = d / .6; // (idem)
-	var id = son.id();
-	var src = son.image.src();
+	var id = son.id;
+	var src = son.image.src;
 	var vidLink = son.youtube || youtube.getSearchLink(son); // Si le lien direct est connu on l'utilise
 	
 	// L'id est utilisé en tant que class pour permettre d'ajouter plusieurs instance du même son
@@ -579,7 +685,7 @@ fip.Grid.Creneau.prototype.date = function() {
  * C'est le créneau courant ?
  */
 fip.Grid.Creneau.prototype.isCurrent = function() {
-	var diff = (new Date() - this.date()) / 3600000; // heure écoulée depuis (diff < 1 <=> créneau courant)
+	var diff = (new Date() - this.date) / 3600000; // heure écoulée depuis (diff < 1 <=> créneau courant)
 	return diff < 1;
 }
 
@@ -595,9 +701,9 @@ fip.Grid.Creneau.prototype.show = function(finMin, debutMax) {
 			return;
 		}
 		
-		var deb = son.date();
+		var deb = son.date;
 		var fin = new Date(deb); // TODO : optimisation en utilisant la date du next son ? ou bien ?
-		fin.setMinutes(fin.getMinutes() + son.duree());
+		fin.setMinutes(fin.getminutes + son.duree);
 		if ((!debutMax || deb <= debutMax) &&
 		    (!finMin   || fin >= finMin))
 			son.show();
@@ -624,7 +730,7 @@ var youtube = {};
  */
 youtube.getSearchLink = function(txt) {
 	// Si txt est un Son
-	if (txt instanceof fip.Son) txt = txt.artiste() + ' ' + txt.titre();
+	if (txt instanceof fip.Son) txt = txt.artiste + ' ' + txt.titre;
 
 	// txt : EMILIANA TORRINI Wednesday's child
 	// enc : EMILIANA+TORRINI+Wednesday%27s+child
@@ -673,8 +779,8 @@ itunes.search = function(txt, callback) {
 itunes.get = function(son, callback) {
 	if (!son instanceof fip.Son) return;
 	
-	var query = son.artiste() + ' ' + son.titre();
-	var pochetteFip = son.image.src();
+	var query = son.artiste + ' ' + son.titre;
+	var pochetteFip = son.image.src;
 	var song = null;
 	this.search(query, function(results) {
 		if (!results || results.length === 0) {
@@ -701,7 +807,7 @@ itunes.get = function(son, callback) {
 		
 		// Plusieurs ?
 		var goodTitreLength = [];
-		var titreLength = son.titre().length;
+		var titreLength = son.titre.length;
 		goodPochettes.forEach(function(res) {
 			if (res.trackName && res.trackName.length === titreLength) {
 				goodTitreLength.push(res);
@@ -722,7 +828,15 @@ itunes.get = function(son, callback) {
 		console.error('Impossible de différencier quel est le bon titre parmi :');
 		console.dir(goodTitreLength);
 	});
-}
+};
+
+// Fermeture de la page
+window.onbeforeunload = function (event) {
+	localStorage.setItem('fip.sons', JSON.stringify(fip.sons));
+
+	// puis pour charger : JSON.parse(localStorage.getItem('fip.sons'))
+	// recreer aussi chaque date
+};
 
 
 
