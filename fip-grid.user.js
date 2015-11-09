@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archives FIP
 // @namespace    http://bludwarf.fr/fip
-// @version      0.5
+// @version      0.6
 // @downloadURL  https://raw.githubusercontent.com/Bludwarf/FIP/master/fip-grid.user.js
 // @description  Récup facile des archives FIP en une seule page
 // @author       bludwarf@gmail.com
@@ -422,12 +422,48 @@ fip.Son.Image.prototype.src = function() {
 
 fip.Son.Image.prototype.isDefault = function() {
 	return this.src() === this.DEFAULT_SRC;
-}
+};
+
+Object.defineProperty(fip, '$select_form', {
+	'get': function() {
+		return fip.$("#fip-titres-diffuses-form-search-date");
+	}
+});
 
 
 
 fip.Grid = function() {
-}
+};
+
+/**
+ * Par date x heure
+ */
+fip.Grid.creneaux = {};
+
+/**
+ *
+ * @param jour {string}
+ * @param heure {number}
+ * @returns {fip.Grid.Creneau}
+ */
+fip.Grid.getCreneau = function(jour, heure) {
+	if (!this.creneaux[jour]) this.creneaux[jour] = {};
+	if (!this.creneaux[jour][heure]) this.creneaux[jour][heure] = new fip.Grid.Creneau(jour, heure);
+	return this.creneaux[jour][heure];
+};
+
+/**
+ * @returns {fip.Grid.Creneau} Le créneau actuellement sélectionné dans l'IHM (dans "Rechercher par date")
+ */
+fip.Grid.getSelectedCreneau = function() {
+	var $form = fip.$select_form;
+	var form = $form.get(0);
+	var date = new Date(form.select_jour.value * 1000);
+	var jour = fip.jour(date);
+	var heure = form.select_heure.value;
+
+	return this.getCreneau(jour, heure);
+};
 
 /**
  * Grille pour un créneau horaire d'une journée donnée
@@ -467,7 +503,7 @@ fip.Grid.Creneau = function(jour, heure, div) {
 		$div = fip.$(div);
 		var parent = fip.$('#block-system-main > .content');
 		if (!parent || parent.size() == 0) throw new Error('Impossible de créer dynamiquement le créneau car on ne trouve pas le parent qui le recevra : ' + '#block-system-main > .content');
-		$div.prependTo(parent);
+		$div.prependTo(parent); // TODO : il faudrait ajouter le son après le précédent
 	}
 	else {
 		$div = fip.$(div);
@@ -561,10 +597,13 @@ fip.Grid.Creneau.prototype.eachSon = function(callback) {
  * Ajout dynamique de tous les sons trouvés pour ce créneau (cf eachSon)
  */
 fip.Grid.Creneau.prototype.fill = function(callback) {
-	var c = this;
-	c.eachSon(function(son) {
-		c.add(son);
-	});
+	if (!this.filled) {
+		var c = this;
+		c.eachSon(function(son) {
+			c.add(son);
+		});
+		this.filled = true;
+	}
 	return this;
 }
 
@@ -732,9 +771,20 @@ itunes.get = function(son, callback) {
 
 importCSS("https://raw.githubusercontent.com/Bludwarf/FIP/master/styles.css");
 
+// A chaque changement de créneau on actualise la grille
+(function() {
+	var $form = fip.$select_form;
+	var form = $form.get(0);
+	var submit = form.op;
+	submit.onmousedown = function() {
+		fip.Grid.getSelectedCreneau().fill();
+		console.warn('TODO : On fait un fill() alors qu\'une requête Ajax a déjà été lancée par FIP');
+	}
+})();
+
 // Création du créneau
 //var jour = '2015-06-22';
-var c = new fip.Grid.Creneau().fill();
+var c = fip.Grid.getSelectedCreneau().fill();
 
 // Exports (pour GreaseMonkey)
 window.fip = fip;
